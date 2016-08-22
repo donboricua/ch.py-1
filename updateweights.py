@@ -32,7 +32,7 @@ class updater:
     print("Searching for latest server weights list...")
     self.ID = self.findid()
     print("Server weight list found!")
-    print("ID: "+self.ID)
+    print("ID: r"+self.ID)
     print("Retrieving server weights...")
     self.weights = self.findweights()
     #print(self.weights)
