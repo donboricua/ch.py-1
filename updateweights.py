@@ -1,28 +1,18 @@
-import urllib.request
-import zlib, json, re
+import requests
+import json, re
 
 class updater:
 
   def findid(self):
-    url = urllib.request.urlopen("http://st.chatango.com/js/gz/emb_perc.js")
-    if url.getheader('Content-Encoding')=="gzip":
-      print("Server weights encoded with gzip, decoding...")
-      data=zlib.decompress(url.read(),47).decode(encoding='ascii',errors='ignore')
-    else:
-      data=url.read()
-    return re.search("r\d+",data).group(0)
+    url = requests.get("http://st.chatango.com/cfg/nc/r.json")
+    id = url.json()["r"]
+    return id
 
   def findweights(self):
-    url = urllib.request.urlopen("http://st.chatango.com/h5/gz/%s/id.html"%self.ID)
+    url = requests.get("http://st.chatango.com/h5/gz/r%s/id.html"%self.ID).text.splitlines()
     print("Found server weights.")
-    if url.getheader('Content-Encoding')=="gzip":
-      print("Server weights encoded with gzip, decoding...")
-      data = zlib.decompress(url.read(),47)
-    else:
-      data=url.read()
     print("Processing server weights...")
-    data = data.decode("utf-8","ignore").splitlines()
-    tags = json.loads(data[6].split(" = ")[-1])
+    tags = json.loads(url[7].split(" = ")[-1])
     weights = []
     for a,b in tags["sm"]:
       c = tags["sw"][b]
